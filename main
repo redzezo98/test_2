@@ -1,0 +1,91 @@
+#include<iostream>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+// Hàm kiểm tra 1 kí tự có nằm trong chuỗi ko
+bool check(vector<char> temp, char kt)
+{
+	for (int i = 0; i < temp.size(); i++) {
+		if (temp[i] == kt) return true; // nếu có tồn tài thì return về true
+	}
+	return false;
+}
+
+void ham_gan(string s, vector<char>& s1) // Hàm gán các kí tự mà không trùng lặp vào chuỗi mới
+{
+	s1.push_back(s[0]);
+	vector<char> temp; // vector lưu trữ tạm chuỗi phụ
+	temp.push_back(s[0]);
+	for (int i = 1; i < s.size(); i++) {
+		if (!check(temp, s[i])) {
+			s1.push_back(s[i]);
+			temp.push_back(s[i]);
+		}
+		if (s[i] == ' ') {
+
+			temp.clear(); // xóa thành phần vector lưu trữ tạm để chuẩn bị lưu chuỗi phụ mới
+		}
+	}
+}
+
+// Hàm tìm độ dài chuỗi phụ lớn nhất trong chuỗi mới
+int do_dai_max(vector<char> s1) {
+	int do_dai_lon_nhat = 0;
+	int do_dai;
+	int count = 0;
+	for (int i = 0; i < s1.size(); i++) {
+		if (s1[i] == ' ') {
+			count = 0;
+			continue;
+		}
+		count++;
+		do_dai = count;
+		if (do_dai > do_dai_lon_nhat) {
+			do_dai_lon_nhat = do_dai;
+		}
+	}
+	return do_dai_lon_nhat;
+}
+
+
+// sau khi biết độ dài lớn nhất, in ra chuỗi có độ dài tương ứng
+void ket_qua(vector<char> s1, int max)
+{
+	max = do_dai_max(s1);
+	int count = 0;
+	for (int i = 0; i < s1.size(); i++) {
+		if (s1[i] == ' ') {
+			count = 0;
+			continue;
+		}
+		count++;
+		if (count == max) {
+			for (int j = i - count + 1; j <= i; j++) {
+				cout << s1[j];
+				if (j == i) {
+					cout << "[" << max << "]" << endl;
+				}
+
+			}
+		}
+	}
+}
+
+int main()
+{
+	string s;
+	vector<char> new_s;
+	fflush(stdin);
+	getline(cin, s);
+	// tiến hành gán
+	ham_gan(s, new_s);
+
+	int max = do_dai_max(new_s);
+
+	ket_qua(new_s, max);
+
+	system("pause");
+	return 0;
+}
